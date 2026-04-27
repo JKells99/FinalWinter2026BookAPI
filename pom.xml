@@ -41,6 +41,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Source: https://mvnrepository.com/artifact/de.mkammerer/argon2-jvm -->
         <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
