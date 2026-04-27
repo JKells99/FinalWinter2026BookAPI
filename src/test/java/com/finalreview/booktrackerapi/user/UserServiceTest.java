@@ -12,19 +12,21 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    UserRestRepository userRestRepository;
+    UserRepository userRepository;
     @InjectMocks
     UserService userService;
     @Test
     public void testUserCreate(){
         User user = new User();
         user.setUsername("test");
+        user.setEmail("test@example.com");
         user.setPassword("1234");
         user.setBio("test bio");
 
-        when(userRestRepository.save(user)).thenReturn(user);
-        userService.saveUser(user);
+        when(userRepository.save(user)).thenReturn(user);
+        userService.createUser(user);
         Assertions.assertEquals("test", user.getUsername());
+        Assertions.assertEquals("test@example.com", user.getEmail());
         Assertions.assertEquals("test bio", user.getBio());
     }
 

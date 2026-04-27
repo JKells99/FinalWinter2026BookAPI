@@ -1,39 +1,43 @@
 package com.finalreview.booktrackerapi.user;
 
-import com.finalreview.booktrackerapi.dtos.AuthResponse;
-import com.finalreview.booktrackerapi.dtos.UserLoginCredentials;
-import com.finalreview.booktrackerapi.dtos.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "User controller is working!";
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.createUser(user));
     }
-    @PostMapping("/createUser")
-    public ResponseEntity<UserResponseDTO> saveNewUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.saveUser(user));
-    }
-    @GetMapping("/getAllUsers")
-    public ResponseEntity<Iterable<UserResponseDTO>> getAllUsers() {
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
-    @PostMapping("/verifyUser")
-    public ResponseEntity<?> verifyUser(@RequestBody UserLoginCredentials userLoginCredentials) {
-        String username = userLoginCredentials.username();
-        String password = userLoginCredentials.password();
-        boolean isValid = userService.verifyUser(username, password);
-        if (!isValid) {
-            return ResponseEntity.badRequest().body(new AuthResponse("Invalid username or password please try again", username));
-        }
-        return ResponseEntity.ok(new AuthResponse("Login successful", username));
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        return ResponseEntity.ok(userService.updateUser(id, userDetails));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
